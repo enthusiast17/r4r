@@ -9,77 +9,55 @@ func NewRouter() *Router {
 	return &Router{routes: make(map[string]*Route)}
 }
 
-func (r *Router) hasRoute(URL string) bool {
+func (r *Router) addRoute(URL string, withMethod func(r *Route)) {
 	_, has := r.routes[URL]
-	return has
+	if !has {
+		route := NewRoute(URL)
+		withMethod(route)
+		r.routes[URL] = route
+	} else {
+		withMethod(r.routes[URL])
+	}
 }
 
 func (r *Router) Get(URL string, middlewares []Middleware, handler Handler) {
-	if r.hasRoute(URL) {
-		r.routes[URL].Get(wrapWithMiddlewares(handler, middlewares))
-	} else {
-		route := NewRoute(URL)
-		route.Get(wrapWithMiddlewares(handler, middlewares))
-		r.routes[URL] = route
-	}
+	r.addRoute(URL, func(r *Route) {
+		r.Get(wrapWithMiddlewares(handler, middlewares))
+	})
 }
 
 func (r *Router) Put(URL string, middlewares []Middleware, handler Handler) {
-	if r.hasRoute(URL) {
-		r.routes[URL].Get(wrapWithMiddlewares(handler, middlewares))
-	} else {
-		route := NewRoute(URL)
-		route.Get(wrapWithMiddlewares(handler, middlewares))
-		r.routes[URL] = route
-	}
+	r.addRoute(URL, func(r *Route) {
+		r.Put(wrapWithMiddlewares(handler, middlewares))
+	})
 }
 
 func (r *Router) Post(URL string, middlewares []Middleware, handler Handler) {
-	if r.hasRoute(URL) {
-		r.routes[URL].Get(wrapWithMiddlewares(handler, middlewares))
-	} else {
-		route := NewRoute(URL)
-		route.Get(wrapWithMiddlewares(handler, middlewares))
-		r.routes[URL] = route
-	}
+	r.addRoute(URL, func(r *Route) {
+		r.Post(wrapWithMiddlewares(handler, middlewares))
+	})
 }
 
 func (r *Router) Delete(URL string, middlewares []Middleware, handler Handler) {
-	if r.hasRoute(URL) {
-		r.routes[URL].Get(wrapWithMiddlewares(handler, middlewares))
-	} else {
-		route := NewRoute(URL)
-		route.Get(wrapWithMiddlewares(handler, middlewares))
-		r.routes[URL] = route
-	}
+	r.addRoute(URL, func(r *Route) {
+		r.Delete(wrapWithMiddlewares(handler, middlewares))
+	})
 }
 
 func (r *Router) Head(URL string, middlewares []Middleware, handler Handler) {
-	if r.hasRoute(URL) {
-		r.routes[URL].Get(wrapWithMiddlewares(handler, middlewares))
-	} else {
-		route := NewRoute(URL)
-		route.Get(wrapWithMiddlewares(handler, middlewares))
-		r.routes[URL] = route
-	}
+	r.addRoute(URL, func(r *Route) {
+		r.Head(wrapWithMiddlewares(handler, middlewares))
+	})
 }
 
 func (r *Router) Trace(URL string, middlewares []Middleware, handler Handler) {
-	if r.hasRoute(URL) {
-		r.routes[URL].Get(wrapWithMiddlewares(handler, middlewares))
-	} else {
-		route := NewRoute(URL)
-		route.Get(wrapWithMiddlewares(handler, middlewares))
-		r.routes[URL] = route
-	}
+	r.addRoute(URL, func(r *Route) {
+		r.Trace(wrapWithMiddlewares(handler, middlewares))
+	})
 }
 
 func (r *Router) Option(URL string, middlewares []Middleware, handler Handler) {
-	if r.hasRoute(URL) {
-		r.routes[URL].Get(wrapWithMiddlewares(handler, middlewares))
-	} else {
-		route := NewRoute(URL)
-		route.Get(wrapWithMiddlewares(handler, middlewares))
-		r.routes[URL] = route
-	}
+	r.addRoute(URL, func(r *Route) {
+		r.Option(wrapWithMiddlewares(handler, middlewares))
+	})
 }
