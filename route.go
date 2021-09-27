@@ -13,7 +13,10 @@ func NewRoute(URL string) *Route {
 
 func (r *Route) ToHandler() Handler {
 	return func(writer http.ResponseWriter, request *http.Request) {
-		r.methods[request.Method](writer, request)
+		handler, has := r.methods[request.Method]
+		if has {
+			handler(writer, request)
+		}
 	}
 }
 
