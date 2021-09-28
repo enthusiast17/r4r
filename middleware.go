@@ -10,7 +10,7 @@ func WithMiddlewares(middlewares ...Middleware) []Middleware {
 	return middlewares
 }
 
-func everyMiddlewares(w http.ResponseWriter, r *http.Request, middlewares []Middleware) error {
+func everyMiddlewares(w http.ResponseWriter, r *http.Request, middlewares []Middleware) *Error {
 	for _, middleware := range middlewares {
 		if err := middleware(w, r); err != nil {
 			return err
@@ -23,6 +23,7 @@ func everyMiddlewares(w http.ResponseWriter, r *http.Request, middlewares []Midd
 func wrapWithMiddlewares(handler Handler, middlewares []Middleware) Handler {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if err := everyMiddlewares(w, r, middlewares); err != nil {
+			errorHandler(err, w, r)
 			return
 		}
 
