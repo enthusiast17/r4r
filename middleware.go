@@ -24,9 +24,8 @@ func wrapWithMiddlewares(handler Handler, middlewares []Middleware) Handler {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if err := everyMiddlewares(w, r, middlewares); err != nil {
 			errorHandler(err, w, r)
-			return
+		} else {
+			handler(w, r)
 		}
-
-		handler(w, r)
 	}
 }
