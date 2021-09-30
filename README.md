@@ -16,7 +16,7 @@ package main
 import "r4r"
 
 var PORT int = 5000
-func thisIsMiddleware(w http.ResponseWriter, r *http.Request) { ... }
+func thisIsMiddleware(w http.ResponseWriter, r *http.Request) *r4r.Error { ... }
 
 func main() {
   router := r4r.NewRouter()
