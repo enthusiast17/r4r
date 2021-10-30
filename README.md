@@ -15,7 +15,7 @@ package main
 
 import "r4r"
 
-const PORT int = 5000
+const PORT string = ":5000"
 
 func thisIsMiddleware(w http.ResponseWriter, r *http.Request) *r4r.Error {
   return r4r.NewError(404, "Not Found", "This is the way")
